@@ -1,0 +1,64 @@
+Null Hypothesis: Different app versions yield no differences in the stimulation of reminiscence
+
+
+Other hypothesis: 
+- Questions facilitate better than context the work of stimulation by the listeners
+- Stimulation comes more from the listeners than from the app
+- Storytelling fall down as the focus is placed in curation of already shared Stories
+- Songs and Pictures more appreciated thatn Famous people and Historical events
+- Songs based on period of time is enough for stimulating (note: actually, no, interest and preferences are also to be considered)
+- More preparation at the beginning of the study
+- As weeks pass, mood improves
+- 
+
+
+Sumary of results
+- Listeners are normally distributed according to age
+- Narrators are not normally distributed according to age
+- Impact of app version in 
+    * created stories by session => None, but version 
+
+ANOVA and FRIEDMAN results
+
+##################################################################################################################################
+1. Appversion FOR STORYTELLING:  vs Stories created in session
+Error: Participant
+          Df Sum Sq Mean Sq F value Pr(>F)
+Residuals  7  158.5   22.64               
+
+Error: Participant:Group
+          Df Sum Sq Mean Sq F value Pr(>F)
+Group      3  10.75   3.583   0.464  0.711  # ===> Null hypothesis true
+Residuals 21 162.25   7.726               
+[1] "Square-root differences between conditions"
+        [,1]    [,2]   [,3] [,4]
+[1,]      NA      NA     NA   NA
+[2,]  97.875      NA     NA   NA
+[3,]  62.875  77.500     NA   NA
+[4,] 166.000 171.875 72.875   NA
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 0.8, p-value = 0.8544        # ===> Null hypothesis true
+
+
+$PostHoc.Test
+               
+2 - 1 0.8544439
+3 - 1 0.9996422
+4 - 1 0.9906230
+3 - 2 0.8971103
+4 - 2 0.9590822
+4 - 3 0.9971693
+
+##################################################################################################################################
+1. Appversion FOR CURATION: vs Stories EDITED in session
+
+
+
+
+
