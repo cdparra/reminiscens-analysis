@@ -1,0 +1,23 @@
+Univariate Type III Repeated-Measures ANOVA Assuming Sphericity
+
+                 SS num Df Error SS den Df        F    Pr(>F)    
+(Intercept) 1472.00      1   161.50     22 200.5201 1.556e-12 ***
+design         4.43      3   518.07     66   0.1883     0.904    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+Mauchly Tests for Sphericity
+
+       Test statistic  p-value
+design        0.60461 0.064282
+
+
+Greenhouse-Geisser and Huynh-Feldt Corrections
+ for Departure from Sphericity
+
+        GG eps Pr(>F[GG])
+design 0.77446      0.859
+
+          HF eps Pr(>F[HF])
+design 0.8713845  0.8807694
