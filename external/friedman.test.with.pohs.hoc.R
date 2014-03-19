@@ -1,4 +1,8 @@
-friedman.test.with.post.hoc <- function(formu, data, to.print.friedman = T, to.post.hoc.if.signif = T,  to.plot.parallel = T, to.plot.boxplot = T, signif.P = .05, color.blocks.in.cor.plot = T, jitter.Y.in.cor.plot =F)
+friedman.test.with.post.hoc <- function(formu, data, to.print.friedman = T, 
+                                        to.post.hoc.if.signif = T,  to.plot.parallel = T, 
+                                        to.plot.boxplot = T, signif.P = .05, color.blocks.in.cor.plot = T, 
+                                        jitter.Y.in.cor.plot =F, 
+                                        plot.filename = "plot-of-differences.pdf")
 {
   # formu is a formula of the shape: 	Y ~ X | block
   # data is a long data.frame with three columns:    [[ Y (numeric), X (factor), block (factor) ]]
@@ -66,6 +70,7 @@ friedman.test.with.post.hoc <- function(formu, data, to.print.friedman = T, to.p
       
       
       # plotting
+      print("Here we are plotting...")
       if(to.plot.parallel & to.plot.boxplot)	par(mfrow = c(1,2)) # if we are plotting two plots, let's make sure we'll be able to see both
       
       if(to.plot.parallel)
@@ -121,6 +126,7 @@ friedman.test.with.post.hoc <- function(formu, data, to.print.friedman = T, to.p
         the.ylim[2] <- the.ylim[2] + max(sd(Y.b.minus.a.combos))	# adding some space for the labels
         is.signif.color <- ifelse(The.post.hoc.P.values < .05 , "green", "grey")
         
+        # Cristhian Parra -> store the plot in a pdf
         boxplot(Y.b.minus.a.combos,
                 names = names.b.minus.a.combos ,
                 col = is.signif.color,
@@ -129,9 +135,10 @@ friedman.test.with.post.hoc <- function(formu, data, to.print.friedman = T, to.p
         )
         legend("topright", legend = paste(names.b.minus.a.combos, rep(" ; PostHoc P.value:", number.of.X.levels),round(The.post.hoc.P.values,5)) , fill =  is.signif.color )
         abline(h = 0, col = "blue")
-        
       }
       
+      dev.copy2pdf(file=plot.filename)
+     
       list.to.return <- list(Friedman.Test = the.sym.test, PostHoc.Test = The.post.hoc.P.values)
       if(to.print.friedman) {print(list.to.return)}				
       return(list.to.return)
