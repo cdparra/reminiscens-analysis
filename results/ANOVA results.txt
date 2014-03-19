@@ -55,9 +55,171 @@ $PostHoc.Test
 4 - 2 0.9590822
 4 - 3 0.9971693
 
+
+# -> last 4 weeks
+Error: Participant
+          Df Sum Sq Mean Sq F value Pr(>F)
+Residuals  3  75.19   25.06               
+
+Error: Participant:Group
+          Df Sum Sq Mean Sq F value Pr(>F)
+Group      3  13.19   4.396   0.608  0.626   # ===> More effect, but still not a diference between groups   
+Residuals  9  65.06   7.229               
+[1] "Square-root differences between conditions"
+      [,1]  [,2] [,3] [,4]
+[1,]    NA    NA   NA   NA
+[2,] 20.75    NA   NA   NA
+[3,] 14.00 14.75   NA   NA
+[4,] 61.00 74.75   75   NA
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 0.8542, p-value = 0.8283
+
+
+$PostHoc.Test
+               
+2 - 1 0.8283330
+3 - 1 0.9411638
+4 - 1 0.8283249
+3 - 2 0.9919550
+4 - 2 1.0000000
+4 - 3 0.9919550
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 0.8542, p-value = 0.8283
+
+
+$PostHoc.Test
+               
+2 - 1 0.8283330
+3 - 1 0.9411638
+4 - 1 0.8283249
+3 - 2 0.9919550
+4 - 2 1.0000000
+4 - 3 0.9919550
+
 ##################################################################################################################################
 1. Appversion FOR CURATION: vs Stories EDITED in session
 
+
+# --> First Weeks
+
+Error: Participant
+          Df Sum Sq Mean Sq F value Pr(>F)
+Residuals  7     13   1.857               
+
+Error: Participant:Group
+          Df Sum Sq Mean Sq F value Pr(>F)
+Group      3    3.0   1.000   0.424  0.738
+Residuals 21   49.5   2.357               
+[1] "Square-root differences between conditions"
+     [,1] [,2] [,3] [,4]
+[1,]   NA   NA   NA   NA
+[2,] 39.5   NA   NA   NA
+[3,] 44.0 39.5   NA   NA
+[4,] 11.5 20.0 43.5   NA
+
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 1.3858, p-value = 0.5082
+
+
+$PostHoc.Test
+               
+2 - 1 0.8290487
+3 - 1 0.9510499
+4 - 1 0.9995668
+3 - 2 0.5082206
+4 - 2 0.8783177
+4 - 3 0.9191832
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 1.3858, p-value = 0.5082
+
+
+$PostHoc.Test
+               
+2 - 1 0.8290487
+3 - 1 0.9510499
+4 - 1 0.9995668
+3 - 2 0.5082206
+4 - 2 0.8783177
+4 - 3 0.9191832
+
+# ---> Last weeks
+Error: Participant
+          Df Sum Sq Mean Sq F value Pr(>F)
+Residuals  3  118.7   39.56               
+
+Error: Participant:Group
+          Df Sum Sq Mean Sq F value Pr(>F)
+Group      3   2.19   0.729   0.149  0.928
+Residuals  9  44.06   4.896               
+[1] "Square-root differences between conditions"
+      [,1]  [,2]  [,3] [,4]
+[1,]    NA    NA    NA   NA
+[2,] 25.00    NA    NA   NA
+[3,] 46.00 27.00    NA   NA
+[4,] 28.75 24.75 24.75   NA
+
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by
+     Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 0.866, p-value = 0.8224
+
+
+$PostHoc.Test
+               
+2 - 1 0.8224046
+3 - 1 0.9728044
+4 - 1 0.9728040
+3 - 2 0.9728041
+4 - 2 0.9728042
+4 - 3 1.0000000
+
+$Friedman.Test
+
+    Asymptotic General Independence Test
+
+data:  Value by
+     Group (1, 2, 3, 4) 
+     stratified by Participant
+maxT = 0.866, p-value = 0.8224
+
+
+$PostHoc.Test
+               
+2 - 1 0.8224046
+3 - 1 0.9728044
+4 - 1 0.9728040
+3 - 2 0.9728041
+4 - 2 0.9728042
+4 - 3 1.0000000
 
 
 

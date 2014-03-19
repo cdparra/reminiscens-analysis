@@ -3,210 +3,190 @@
 # Author: Cristhian Parra                                                                         #
 ###################################################################################################
 # Auxiliary Packages to use
-library(ggplot2)
-library(manipulate)
-library(plyr)
-library(xtable)
-library(reporttools)
-library(reshape)
+{
+    library(ggplot2)
+    library(manipulate)
+    library(plyr)
+    library(xtable)
+    library(reporttools)
+    library(reshape)
+}
 
 # Personal and External Function sources
-source("scripts/reminiscens.tests.utils.R")
-source("external/friedman.test.with.pohs.hoc.R") # Friedman test as implemented by [1] 
-                                                 
+{
+    source("scripts/reminiscens.tests.utils.R")
+    source("external/friedman.test.with.pohs.hoc.R") # Friedman test as implemented by [1] 
+}         
+
 # Some globals
-datadir <- "data/"
-sessfname <- "sessions_dataset_1.csv"
-partfname <- "participants_dataset_1.csv"
-sessfile <- paste(datadir,sessfname,sep="")
-partfile <- paste(datadir,partfname,sep="")
-figdir <- "plots/"
+{
+    datadir <- "data/"
+    sessfname <- "sessions_dataset_1.csv"
+    partfname <- "participants_dataset_1.csv"
+    sessfile <- paste(datadir,sessfname,sep="")
+    partfile <- paste(datadir,partfname,sep="")
+    figdir <- "plots/"
+    
+    qualscores <- c("p_score",                                          # preservation scores
+                    "s_max_sore", "se_score", "sg_score", "set_score",  # stimulation scores
+                    "st_score",                                         # storytelling scores
+                    "sr_score",                                         # self-reflection scores 
+                    "pc_score", "pnc_score",                            # preservation scores
+                    "cc_score", "cnc_score",                            # curation scores
+                    "c_max_score"                                       # collaboration scores
+                    )
+    
+    appvnames <- c("Personal","Questions", "Context", "All")
+    
+    studytracks <- c("Stable", "Firs week only", "Pilot")
+    
+    socialcontexts <- c("Family", "No Family")
+}
 
 # Load Reminiscens sessions dataset
-print("Reading and preparing the data...")
-sessfulltable <- read.csv(sessfile,header=T,sep=";")  
-partfulltable <- read.csv(partfile,header=T,sep=";")  
-attach(sessfulltable)
-attach(partfulltable)
+{
+    print("Reading and preparing the data...")
+    sessfulltable <- read.csv(sessfile,header=T,sep=",")  
+    partfulltable <- read.csv(partfile,header=T,sep=",")  
+    attach(sessfulltable)
+    attach(partfulltable)
+}
 
 # Filter out sessions
-sesspilot <- sessfulltable[done==1&group==0,]   # Pilot study sessions
-sess <- sessfulltable[done==1&group!=0,]		# Only done sessions
-sessstabl <- sess[sess$group==1,]				# Stable group sessions
-sess1time <- sess[sess$group==2,]				# 1-Time group sessions
-sess1week <- sess[sess$week==1,]    			# First week sessions
-sessfamily <- sess[sess$family==1,]				# Sessions in Family
-sessnofamily <- sess[sess$family==0,]			# Sessions not in Family
-sessnofamilystabl <- 
-    sessstabl[sessstabl$family==0,]    		    # Sessions not in Family
-
-# Filter out participants
-partpilot = 
-    partfulltable[partfulltable$type==0,]		# Pilot study participants
-listpilot = 
-    partpilot[partpilot$type==0
-              &partpilot$islistener==1,]      	# Pilot group listeners
-narrpilot = 
-    partpilot[partpilot$type==0
-              &partpilot$islistener==0,]  		# Pilot group narrators
-
-part = partfulltable[partfulltable$type!=0,]	# All the participants
-partstabl = part[part$type==1,]				    # Stable group participants
-part1time = part[part$type==2,]					# 1-Time group participants
-list = part[part$islistener==1,]				# Listeners
-narr = part[part$islistener==0,]				# Narrators
-liststabl = list[list$type==1,]				    # Stable group listeners
-list1time = list[list$type==2,]					# 1-Time group listeners
-narrstabl = narr[narr$type==1,]				    # Stable group narrators
-narr1time = narr[narr$type==2,]					# 1-Time group narrators
-
-appvnames <- c("Personal","Questions only", "Context only", "All included")
+{
+    sesspilot <- sessfulltable[done==1&group==0,]   # Pilot study sessions
+    sess <- sessfulltable[done==1&group!=0,]		# Only done sessions
+    sessstabl <- sess[sess$group==1,]				# Stable group sessions
+    sess1time <- sess[sess$group==2,]				# 1-Time group sessions
+    sess1week <- sess[sess$week==1,]    			# First week sessions
+    sessfamily <- sess[sess$family==1,]				# Sessions in Family
+    sessnofamily <- sess[sess$family==0,]			# Sessions not in Family
+    sessnofamilystabl <- 
+        sessstabl[sessstabl$family==0,]    		    # Sessions not in Family
+    
+    # Filter out participants
+    partpilot = 
+        partfulltable[partfulltable$type==0,]		# Pilot study participants
+    listpilot = 
+        partpilot[partpilot$type==0
+                  & partpilot$islistener==1,]      	# Pilot group listeners
+    narrpilot = 
+        partpilot[partpilot$type==0
+                  & partpilot$islistener==0,]  		# Pilot group narrators
+    
+    part = partfulltable[partfulltable$type!=0,]	# All the participants
+    partstabl = part[part$type==1,]				    # Stable group participants
+    part1time = part[part$type==2,]					# 1-Time group participants
+    list = part[part$islistener==1,]				# Listeners
+    narr = part[part$islistener==0,]				# Narrators
+    liststabl = list[list$type==1,]				    # Stable group listeners
+    list1time = list[list$type==2,]					# 1-Time group listeners
+    narrstabl = narr[narr$type==1,]				    # Stable group narrators
+    narr1time = narr[narr$type==2,]					# 1-Time group narrators
+    
+    appvnames <- c("Personal","Questions", "Context", "All")
+}
 
 # Basic descriptive statistics
-# --> Listeners participants
-print("Descriptive statistics")
-print("--> Age summary of listeners")
-summary(list$age)
-print("--> Age summary of listeners in the pilot study")
-summary(listpilot$age)
-print("--> Age summary of listeners in the stable group")
-summary(liststabl$age)
-print("--> Age summary of listeners in the 1-Time group")
-summary(list1time$age)
-
-pdf(paste(figdir,"listeners_age_histogram.pdf",sep=""))
-list_hist<-hist(list$age,main="Age distribution of listeners",xlab="Age")
-dev.off()
-hist(list$age,main="Age distribution of listeners",xlab="Age")
-
-# --> Narrators participants
-print("Descriptive statistics")
-print("--> Age summary of narrators")
-summary(narr$age)
-print("--> Age summary of narrators in the pilot study")
-summary(narrpilot$age)
-print("--> Age summary of narrators in the stable group")
-summary(narrstabl$age)
-print("--> Age summary of narrators in the 1-Time group")
-summary(narr1time$age)
-
-pdf(paste(figdir,"narrators_age_histogram.pdf",sep=""))
-narr_hist<-hist(narr$age,main="Age distribution of narrators",xlab="Age")
-dev.off()
-hist(narr$age,main="Age distribution of narrators",xlab="Age")
+{
+    # --> Listeners participants
+    print("Descriptive statistics")
+    print("--> Age summary of listeners")
+    summary(list$age)
+    print("--> Age summary of listeners in the pilot study")
+    summary(listpilot$age)
+    print("--> Age summary of listeners in the stable group")
+    summary(liststabl$age)
+    print("--> Age summary of listeners in the 1-Time group")
+    summary(list1time$age)
+    
+    pdf(paste(figdir,"listeners_age_histogram.pdf",sep=""))
+    list_hist<-hist(list$age,main="Age distribution of listeners",xlab="Age")
+    dev.off()
+    hist(list$age,main="Age distribution of listeners",xlab="Age")
+    
+    # --> Narrators participants
+    print("Descriptive statistics")
+    print("--> Age summary of narrators")
+    summary(narr$age)
+    print("--> Age summary of narrators in the pilot study")
+    summary(narrpilot$age)
+    print("--> Age summary of narrators in the stable group")
+    summary(narrstabl$age)
+    print("--> Age summary of narrators in the 1-Time group")
+    summary(narr1time$age)
+    
+    pdf(paste(figdir,"narrators_age_histogram.pdf",sep=""))
+    narr_hist<-hist(narr$age,main="Age distribution of narrators",xlab="Age")
+    dev.off()
+    hist(narr$age,main="Age distribution of narrators",xlab="Age")
+}
 
 # SUMMARIES AND PIVOT TABLES #########################################################
-# Basic descriptive statistics of sessions
-
-# App version per Track of the study
-ses_appv_group <- data.frame(sess$sid,sess$appversion,sess$group)
-attach(ses_appv_group)
-ses_apv_group <- xtabs(freq ~ sess.group+sess.appversion,
-        count(ses_appv_group,
-              c("sess.group","sess.appversion")
-        )
-)	
-ses_apv_group
-ltx_ses_apv_group <- xtable(ses_apv_group)
-# tableNominal(vars = tli.table, 
-#              cap = "Sessions per Appverison", 
-#              vertical = FALSE, 
-#              lab = "tab:longstudy-sessions-appversion", 
-#              longtable = FALSE)
-ltx_ses_apv_group
-
-# App version against family/non family variable
-ses_appv_family = data.frame(sess$sid,sess$appversion,sess$family)
-attach(ses_appv_family)
-ses_appv_family <- xtabs(freq ~ sess.family+sess.appversion,
-      count(ses_appv_family,
-            c("sess.family","sess.appversion")
-      )
-)  
-ses_appv_family
-ltx_ses_appv_family <- xtable(ses_appv_family)
-ltx_ses_appv_family
+{
+    # Basic descriptive statistics of sessions    
+    # App version per Track of the study
+    ses_appv_group <- data.frame(sess$sid,sess$appversion,sess$group)
+    attach(ses_appv_group)
+    ses_apv_group <- xtabs(freq ~ sess.group+sess.appversion,
+            count(ses_appv_group,
+                  c("sess.group","sess.appversion")
+            )
+    )	
+    ses_apv_group
+    ltx_ses_apv_group <- xtable(ses_apv_group)
+    # tableNominal(vars = tli.table, 
+    #              cap = "Sessions per Appverison", 
+    #              vertical = FALSE, 
+    #              lab = "tab:longstudy-sessions-appversion", 
+    #              longtable = FALSE)
+    ltx_ses_apv_group
+    
+    # App version against family/non family variable
+    ses_appv_family = data.frame(sess$sid,sess$appversion,sess$family)
+    attach(ses_appv_family)
+    ses_appv_family <- xtabs(freq ~ sess.family+sess.appversion,
+          count(ses_appv_family,
+                c("sess.family","sess.appversion")
+          )
+    )  
+    ses_appv_family
+    ltx_ses_appv_family <- xtable(ses_appv_family)
+    ltx_ses_appv_family
+}
 
 ########################################################################################
 # Auxiliary Data Preparations techniques, looking for unbalance in data
-subset_columns <- c("week", "nid", "stat_stories_from_log", "appversion", "group")
-vcolumn <- "stat_stories_from_log"
-gcolumn <- "appversion"
-pcolumn <- "nid"
+# Check data.preparations.R to see why we filter like this
+{
+    # FILTERED DATASETS
+    # removed participant 77 because it did not tried app v1
+    stable_1stweeks <- sess[sess$week<5 & sess$group==1 & sess$nid!=77,]        # first 4 weeks, all 4 versions
+    # removed participant 75, 77, 79, 83, 98 because it did not tried all versions
+    stable_lastweeks <- sess[sess$week>4 & sess$group==1 & sess$nid!=77     # last 4 weeks, all 4 versions
+                             & sess$nid!=75 & sess$nid!=79 & sess$nid!=83 
+                             & sess$nid!=98, ]
+    
+    # removed participant 77 because it did not tried app v1
+    stable_1stweeks_v1v4 <- sess[sess$week<5 & sess$group==1 
+                                 & sess$nid!=77 & sess$appversion!=2 
+                                 & sess$appversion!=3,]        # first 4 weeks, all 4 versions
+    
+    # removed participant 79, 83, 98 because it did not tried v1 or v4
+    stable_lastweeks_v1v4 <- sess[sess$week>4 & sess$group==1 & sess$nid!=79 
+                                  & sess$nid!=83 & sess$nid!=98
+                                  & sess$appversion!=2 
+                                  & sess$appversion!=3, ]
+    
+    
+    firstweekall <- sess[sess$week==1,]        # first week, all 4 versions
+    
+    
+    # remove last 2 weeks
+    stable_mood_week_all <- sess[sess$group==1,]
+    stable_mood_week_6 <- sess[sess$group==1 & sess$week<7, ]
+}
 
-df <- sess[,subset_columns]
-str(df)
-table(df$week)
-
-# --> Take first only the first 4 weeks
-df <- df[df$week<5 & df$group==1,]
-str(df)
-
-# --> Check balance in a pivot table of groups versus participants
-cast(df,nid ~ appversion, value="stat_stories_from_log")
-# nid 1 2 3 4
-# 1  69 1 1 1 1
-# 2  70 1 1 1 1
-# 3  73 1 1 1 1
-# 4  75 1 1 1 1
-# 5  77 0 1 2 1  ==> Imputation (delete or simulate value)
-# 6  78 1 1 1 1
-# 7  79 1 1 1 1
-# 8  83 1 1 1 1
-# 9  98 1 1 1 1
-
-# --> Deal with unbalanced data
-# --> * Taking out nid=77 becase it didn't try appversion 1 in first 4 week
-cast(df,nid ~ appversion, value="stat_stories_from_log",subset=nid!=77)     # automatically, pivot table holds sums now
-
-# --> Filtered data for the FIRST 4 WEEKS OF THE STABLE
-
-
-df <- sess[,subset_columns]
-str(df)
-table(df$week)
-
-# --> Take first only the first 4 weeks
-df <- df[df$week>4 & df$group==1,]
-str(df)
-
-# --> Check balance in a pivot table of groups versus participants
-cast(df,nid ~ appversion, value=vcolumn)
-# --> Deal with unbalanced data
-# --> * Taking out nid=75, 77, 79, 83, 98 nid becase it didn't try appversion 1 in first 4 week
-# nid 1 2 3 4
-# 1  69 1 1 1 1
-# 2  70 1 1 1 1
-# 3  73 1 1 1 1
-# 4  75 2 0 0 2  ==> Imputation (delete or simulate value)
-# 5  77 1 0 1 2  ==> Imputation (delete or simulate value)
-# 6  78 1 1 1 1
-# 7  79 1 1 0 0  ==> Imputation (delete or simulate value)
-# 8  83 1 0 0 1  ==> Imputation (delete or simulate value)
-# 9  98 0 0 1 1  ==> Imputation (delete or simulate value)
-
-cast(df,nid ~ appversion, value=vcolumn,subset=nid!=77 & nid!=75 & nid!=79 & nid!=83 & nid!=98 )     # automatically, pivot table holds sums now
-
-
-
-
-
-
-
-
-
-
-# FILTERED DATASETS
-stable_1stweeks <- sess[sess$week<5 & sess$group==1 & sess!=77,]        # first 4 weeks, all 4 versions
-stable_lastweeks <- sess[sess$week>4 & sess$group==1 & sess$nid!=77     # last 4 weeks, all 4 versions
-                         & sess$nid!=75 & sess$nid!=79 & sess$nid!=83 
-                         & sess$nid!=98, ]
-
-
-stable_1stweeks <- sess[sess$week<5 & sess$group==1 & sess!=77,]        # first 4 weeks, all 4 versions
-stable_lastweeks <- sess[sess$week>4 & sess$group==1 & sess$nid!=77     # last 4 weeks, all 4 versions
-                         & sess$nid!=75 & sess$nid!=79 & sess$nid!=83 
-                         & sess$nid!=98, ]
 ########################################################################################
 # TEST 1 ==> Repeated measures ANOVA Friedman's Test between appversion and SKM+SSQ
 # We use Friedman's Test because the data is not normally distributed
@@ -224,94 +204,113 @@ stable_lastweeks <- sess[sess$week>4 & sess$group==1 & sess$nid!=77     # last 4
     vcolumn <- "stat_stories_from_log"
     gcolumn <- "appversion"
     pcolumn <- "nid"
-    
+    test <- paste("aov-repeated-",gcolumn,vcolumn,sep="")
     df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
     
     # 3rd step -> run anova 
-    boxplot<-paste(figdir,"longstudy-appversion-sessions-boxplot.pdf")
-    anova.boxplot.posthoc(df,boxplot,appvnames)
+    file <- paste(figdir,test,"-boxplot.pdf",sep="")
+    anova.boxplot.posthoc.repeated(df,bpfile=file,appvnames)
     
     # 4th step -> [optional][if assumptions not met] use friedman's test
     # --> using external function with post hoc and cool plots
     # --> using p = .9 to force a post-hoc and see what it comes out
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9)      
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=file)      
     
+    
+    # Repeat with second half of study
     df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    
-    # 3rd step -> run anova 
-    boxplot<-paste(figdir,"longstudy-appversion-sessions-boxplot.pdf")
-    anova.boxplot.posthoc(df,boxplot,appvnames)
-    
-    # 4th step -> [optional][if assumptions not met] use friedman's test
-    # --> using external function with post hoc and cool plots
-    # --> using p = .9 to force a post-hoc and see what it comes out
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9)      
+    file <- paste(figdir,test,"-boxplot-lastweeks.pdf",sep="")
+    anova.boxplot.posthoc.repeated(df,file,appvnames)
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                , plot.filename=file)      
 }
 
 # ------------------------------------------------------------------------------------
 # --> APPVERSION FOR CURATION: ANOVA FOR APPVERSION vs STORIES EDITED IN SESSION
+# ------------------------------------------------------------------------------------
+# --> ANOVA of APPVERSION vs STORIES EDITED IN SESSION
 {
-    # 1st step -> Check Assumptions
-    # - Given the small number of participants, we overlook assumptions as it will not really
-    #   yield significant results. These analysis are mainly for the purpose of adding to the
-    #   previously qualitative analysis of the study
-    
-    # 2nd step -> Prepare data subset to analyze -> week, nid, stat_stories_from_log, appversion
     subset_columns <- c("week", "nid", "stat_editions_from_log", "appversion", "group")
     vcolumn <- "stat_editions_from_log"
     gcolumn <- "appversion"
     pcolumn <- "nid"
-    
-    df <- sess[,subset_columns]
-    str(df)
-    table(df$week)
-    
-    # --> Take first only the first 4 weeks
-    df <- df[df$week<5 & df$group==1,]
-    str(df)
-    
-    # --> Check balance in a pivot table of groups versus participants
-    cast(df,nid ~ appversion, value=vcolumn)
-    # --> Deal with unbalanced data
-    # --> * Taking out nid=77 becase it didn't try appversion 1 in first 4 week
-    cast(df,nid ~ appversion, value=vcolumn,subset=nid!=77)     # automatically, pivot table holds sums now
-    
-    # --> Filtered data
-    df <- df[df$nid!=77,]
-    
-    # sess$week<5 & sess$group==1 & sess$nid!=77
-    df <- prepare.subset.data(df,vcolumn,gcolumn,pcolumn)
-    
-    # 3rd step -> run anova 
-    boxplot<-paste(figdir,"longstudy-appversion-sessions-boxplot.pdf")
-    anova.boxplot.posthoc(df,boxplot,appvnames)
+    test <- paste("aov-repeated-",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot.pdf",sep="")
+    anova.boxplot.posthoc.repeated(df,file,appvnames)
     
     # 4th step -> [optional][if assumptions not met] use friedman's test
     # --> using external function with post hoc and cool plots
     # --> using p = .9 to force a post-hoc and see what it comes out
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9)      
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9,
+                                plot.filename=file)      
+    
+    # Repeat with second half of study
+    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
+    boxplot <- paste(figdir,test,"-boxplot-lastweeks.pdf",sep="")
+    anova.boxplot.posthoc(df,boxplot,appvnames)
+    boxplot <- paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=boxplot)   
+}
+
+# ------------------------------------------------------------------------------------
+# --> APPVERSION FOR STORIES only FIRST WEEK
+# ------------------------------------------------------------------------------------
+# --> ANOVA of APPVERSION vs STORIES CREATED IN SESSION 1
+# --> OBSERVATION: the design here is Between-Group
+{
+    subset_columns <- c("week", "nid", "stat_stories_from_log", "appversion", "group")
+    vcolumn <- "stat_editions_from_log"
+    gcolumn <- "appversion"
+    pcolumn <- "nid"
+    test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot.pdf",sep="")
+    anova.boxplot.posthoc(df,file,appvnames)
+    
+    subset <- firstweekall[,subset_columns]
+    cast(subset,week  ~ appversion, value="stat_stories_from_log")
+    
 }
 
 
+# ------------------------------------------------------------------------------------
+# --> APPVERSION FOR  STORYTELLING, STIMULATION, COLLABORATION
+# ------------------------------------------------------------------------------------
+# --> ANOVA of APPVERSION vs STORIES CREATED IN SESSION 1
+# --> OBSERVATION: the design here is Between-Group
+{
+    subset_columns <- c("week", "nid", 
+                        "p_score",                                          # preservation scores
+                        "s_max_sore", "se_score", "sg_score", "set_score",  # stimulation scores
+                        "st_score",                                         # storytelling scores
+                        "sr_score",                                         # self-reflection scores 
+                        "pc_score", "pnc_score",                            # preservation scores
+                        "cc_score", "cnc_score",                            # curation scores
+                        "c_max_score",                                      # collaboration scores
+                        "appversion",                                       
+                        "group", 
+                        "family")
+    vcolumn <- "stat_editions_from_log"
+    gcolumn <- "appversion"
+    pcolumn <- "nid"
+    test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot.pdf",sep="")
+    anova.boxplot.posthoc(df,file,appvnames)
+    
+    subset <- firstweekall[,subset_columns]
+    cast(subset,week  ~ appversion, value="stat_stories_from_log")
+    
+}
+
 
 # --> 1.2 appversion vs sg_score (stories created in the sesion)
-
-Value = sess$sg_score
-with(ReminiscensSession, boxplot(Value  ~ Group )) # boxploting 
-data = data.frame(Group,Value)
-Group1 = data[data$Group==1,]$Value
-Group2 = data[data$Group==2,]$Value
-Group3 = data[data$Group==3,]$Value
-Group4 = data[data$Group==4,]$Value
-group_lists = list(Group1,Group2,Group3,Group4)
-max_length = max(length(Group1),length(Group2),length(Group3),length(Group4))
-data2 = sapply(group_lists,'[',1:max_length)
-friedman.test(data2)
-# post-hoc test
-NewValue=c(data2[,1],data2[,2],data2[,3],data2[,4])
-NewGroup=c(rep(1,23),rep(2,23),rep(3,23),rep(4,23))
-pairwise.wilcox.test(NewValue, NewGroup, p.adj="bonferroni", exact=F, paired=T)
-
 
 
 # TEST 2 ==> SplitPlot ANOVA between appversion/group and SKM+SSQ
