@@ -1,0 +1,176 @@
+
+data:  CollabScores and Stories
+t = -1.7, df = 63, p-value = 0.09634
+95 percent confidence interval:
+ -0.430  0.038
+sample estimates:
+  cor 
+-0.21 
+
+data:  ExtStimulation and Stories
+t = 0.89, df = 63, p-value = 0.3763
+95 percent confidence interval:
+ -0.14  0.35
+sample estimates:
+ cor 
+0.11 
+
+data:  MoodNarrator and ExtStimulation
+t = 0.79, df = 57, p-value = 0.4312
+95 percent confidence interval:
+ -0.16  0.35
+sample estimates:
+cor 
+0.1 
+
+data:  MoodNarrator and CollabScores
+t = 0.51, df = 57, p-value = 0.6103
+95 percent confidence interval:
+ -0.19  0.32
+sample estimates:
+  cor 
+0.068 
+
+
+data:  Family and CollabScores
+t = -0.71, df = 63, p-value = 0.4774
+95 percent confidence interval:
+ -0.33  0.16
+sample estimates:
+  cor 
+-0.09 
+
+
+data:  ExtStimulation and Stories
+t = 0.89, df = 63, p-value = 0.3763
+95 percent confidence interval:
+ -0.14  0.35
+sample estimates:
+ cor 
+0.11 
+
+
+data:  MoodNarrator and ExtStimulation
+t = 0.79, df = 57, p-value = 0.4312
+95 percent confidence interval:
+ -0.16  0.35
+sample estimates:
+cor 
+0.1 
+
+
+data:  MoodNarrator and CollabScores
+t = 0.51, df = 57, p-value = 0.6103
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.19  0.32
+sample estimates:
+  cor 
+0.068 
+
+
+data:  Family and CollabScores
+t = -0.71, df = 63, p-value = 0.4774
+95 percent confidence interval:
+ -0.33  0.16
+sample estimates:
+  cor 
+-0.09 
+
+data:  CollabScores and GuidedStimulation
+t = -0.57, df = 63, p-value = 0.5705
+95 percent confidence interval:
+ -0.31  0.18
+sample estimates:
+   cor 
+-0.072 
+
+
+data:  CollabScores and Stimulation
+t = 0.29, df = 63, p-value = 0.7738
+95 percent confidence interval:
+ -0.21  0.28
+sample estimates:
+  cor 
+0.036 
+
+
+
+
+
+data:  CollabScores and AppUsage
+t = -1.3, df = 63, p-value = 0.1852
+95 percent confidence interval:
+ -0.394  0.081
+sample estimates:
+  cor 
+-0.17    *****
+
+
+
+
+
+
+
+data:  CollabScores and NarratorSocial
+t = -0.47, df = 33, p-value = 0.6393
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.40  0.26
+sample estimates:
+   cor 
+-0.082      *******
+
+
+data:  Storytelling and NarratorSocial
+t = 1.3, df = 33, p-value = 0.1909
+95 percent confidence interval:
+ -0.12  0.52
+sample estimates:
+ cor 
+0.23             *********************
+
+
+
+
+data:  Storytelling and ListenerSocial
+t = -2.1, df = 40, p-value = 0.0424
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.565 -0.012
+sample estimates:
+  cor 
+-0.31      ***********
+
+
+data:  Stimulation and ListenerSocial
+t = -3.7, df = 40, p-value = 0.0007251
+95 percent confidence interval:
+ -0.70 -0.23
+sample estimates:
+ cor 
+-0.5    **********
+
+
+data:  CollabScores and ListenerSocial
+t = 2.5, df = 40, p-value = 0.01647
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.072 0.604
+sample estimates:
+ cor 
+0.37 ******************* 
+
+
+
+
+data:  Intergenerational and CollabPreservation
+t = -0.17, df = 63, p-value = 0.8665
+95 percent confidence interval:
+ -0.26  0.22
+sample estimates:
+   cor 
+-0.021 
+
+RStudioGD 
+        2 

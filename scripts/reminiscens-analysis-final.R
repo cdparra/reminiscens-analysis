@@ -34,7 +34,7 @@
                     "pc_score", "pnc_score",                            # preservation scores
                     "cc_score", "cnc_score",                            # curation scores
                     "c_max_score"                                       # collaboration scores
-                    )
+    )
     
     preparation  <- "p_score"      # preservation scores
     stimulation  <- "s_max_score"  # stimulation scores
@@ -68,7 +68,7 @@
 # Filter out sessions
 {
     sesspilot <- sessfulltable[done==1&group==0,]   # Pilot study sessions
-    sess <- sessfulltable[done==1&group!=0,]		# Only done sessions
+    sess <- sessfulltable[done==1&group!=0,]    	# Only done sessions
     sessstabl <- sess[sess$group==1,]				# Stable group sessions
     sess1time <- sess[sess$group==2,]				# 1-Time group sessions
     sess1week <- sess[sess$week==1,]    			# First week sessions
@@ -100,40 +100,6 @@
     appvnames <- c("Personal","Questions", "Context", "All")
 }
 
-# Basic descriptive statistics
-{
-    # --> Listeners participants
-    print("Descriptive statistics")
-    print("--> Age summary of listeners")
-    summary(list$age)
-    print("--> Age summary of listeners in the pilot study")
-    summary(listpilot$age)
-    print("--> Age summary of listeners in the stable group")
-    summary(liststabl$age)
-    print("--> Age summary of listeners in the 1-Time group")
-    summary(list1time$age)
-    
-    pdf(paste(figdir,"listeners_age_histogram.pdf",sep=""))
-    list_hist<-hist(list$age,main="Age distribution of listeners",xlab="Age")
-    dev.off()
-    hist(list$age,main="Age distribution of listeners",xlab="Age")
-    
-    # --> Narrators participants
-    print("Descriptive statistics")
-    print("--> Age summary of narrators")
-    summary(narr$age)
-    print("--> Age summary of narrators in the pilot study")
-    summary(narrpilot$age)
-    print("--> Age summary of narrators in the stable group")
-    summary(narrstabl$age)
-    print("--> Age summary of narrators in the 1-Time group")
-    summary(narr1time$age)
-    
-    pdf(paste(figdir,"narrators_age_histogram.pdf",sep=""))
-    narr_hist<-hist(narr$age,main="Age distribution of narrators",xlab="Age")
-    dev.off()
-    hist(narr$age,main="Age distribution of narrators",xlab="Age")
-}
 
 # SUMMARIES AND PIVOT TABLES #########################################################
 {
@@ -142,9 +108,9 @@
     ses_appv_group <- data.frame(sess$sid,sess$appversion,sess$group)
     attach(ses_appv_group)
     ses_apv_group <- xtabs(freq ~ sess.group+sess.appversion,
-            count(ses_appv_group,
-                  c("sess.group","sess.appversion")
-            )
+                           count(ses_appv_group,
+                                 c("sess.group","sess.appversion")
+                           )
     )	
     ses_apv_group
     ltx_ses_apv_group <- xtable(ses_apv_group)
@@ -159,9 +125,9 @@
     ses_appv_family = data.frame(sess$sid,sess$appversion,sess$family)
     attach(ses_appv_family)
     ses_appv_family <- xtabs(freq ~ sess.family+sess.appversion,
-          count(ses_appv_family,
-                c("sess.family","sess.appversion")
-          )
+                             count(ses_appv_family,
+                                   c("sess.family","sess.appversion")
+                             )
     )  
     ses_appv_family
     ltx_ses_appv_family <- xtable(ses_appv_family)
@@ -200,96 +166,158 @@
     stable_mood_week_6 <- sess[sess$group==1 & sess$week<7, ]
 }
 
-########################################################################################
-# TEST 1 ==> Repeated measures ANOVA Friedman's Test between appversion and SKM+SSQ
-# We use Friedman's Test because the data is not normally distributed
+
 
 # ------------------------------------------------------------------------------------
-# --> ANOVA of APPVERSION vs STORIES CREATED IN SESSION
+# --> Friedman. => (SS) Created stories
 {
-    # 1st step -> Check Assumptions
-    # - Given the small number of participants, we overlook assumptions as it will not really
-    #   yield significant results. These analysis are mainly for the purpose of adding to the
-    #   previously qualitative analysis of the study
-    
-    # 2nd step -> repare data subset to analyze -> week, nid, stat_stories_from_log, appversion
     subset_columns <- c("week", "nid", "stat_stories_from_log", "appversion", "group")
     vcolumn <- "stat_stories_from_log"
     gcolumn <- "appversion"
     pcolumn <- "nid"
-    test <- paste("aov-repeated-",gcolumn,vcolumn,sep="")
+    test <- paste("SS-friedman",gcolumn,vcolumn,sep="")
     df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    
-    # 3rd step -> run anova 
-    file <- paste(figdir,test,"-boxplot.pdf",sep="")
-    anova.boxplot.posthoc.repeated(df,bpfile=file,appvnames)
-    
-    # 4th step -> [optional][if assumptions not met] use friedman's test
-    # --> using external function with post hoc and cool plots
-    # --> using p = .9 to force a post-hoc and see what it comes out
     file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
     friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
                                 ,plot.filename=file)      
     
-    
     # Repeat with second half of study
     df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    file <- paste(figdir,test,"-boxplot-lastweeks.pdf",sep="")
-    anova.boxplot.posthoc.repeated(df,file,appvnames)
     file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
     friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
                                 , plot.filename=file)      
 }
 
 # ------------------------------------------------------------------------------------
-# --> APPVERSION FOR CURATION: ANOVA FOR APPVERSION vs STORIES EDITED IN SESSION
-# ------------------------------------------------------------------------------------
-# --> ANOVA of APPVERSION vs STORIES EDITED IN SESSION
+# --> Friedman. => (PS) Created pictures
 {
-    subset_columns <- c("week", "nid", "stat_editions_from_log", "appversion", "group")
-    vcolumn <- "stat_editions_from_log"
+    subset_columns <- c("week", "nid", "stat_pictures", "appversion", "group")
+    vcolumn <- "stat_pictures"
     gcolumn <- "appversion"
     pcolumn <- "nid"
-    test <- paste("aov-repeated-",gcolumn,vcolumn,sep="")
+    test <- paste("PS-friedman",gcolumn,vcolumn,sep="")
     df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot.pdf",sep="")
-    anova.boxplot.posthoc.repeated(df,file,appvnames)
-    
-    # 4th step -> [optional][if assumptions not met] use friedman's test
-    # --> using external function with post hoc and cool plots
-    # --> using p = .9 to force a post-hoc and see what it comes out
     file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9,
-                                plot.filename=file)      
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=file)      
     
     # Repeat with second half of study
     df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    boxplot <- paste(figdir,test,"-boxplot-lastweeks.pdf",sep="")
-    anova.boxplot.posthoc(df,boxplot,appvnames)
-    boxplot <- paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
     friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                ,plot.filename=boxplot)   
+                                , plot.filename=file)      
+}
+
+
+# ------------------------------------------------------------------------------------
+# --> Friedman. => (QS) Questions answered
+{
+    subset_columns <- c("week", "nid", "stat_questions_answered", "appversion", "group")
+    vcolumn <- "stat_questions_answered"
+    gcolumn <- "appversion"
+    pcolumn <- "nid"
+    test <- paste("QS-friedman",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=file)      
+    
+    # Repeat with second half of study
+    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                , plot.filename=file)      
+}
+
+
+# ------------------------------------------------------------------------------------
+# --> Friedman. => (MS) Public memento detail views
+{
+    subset_columns <- c("week", "nid", "stat_public_memento_detail_views", "appversion", "group")
+    vcolumn <- "stat_public_memento_detail_views"
+    gcolumn <- "appversion"
+    pcolumn <- "nid"
+    test <- paste("MS-friedman",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=file)      
+    
+    # Repeat with second half of study
+    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                , plot.filename=file)      
 }
 
 # ------------------------------------------------------------------------------------
-# --> APPVERSION FOR STORIES only FIRST WEEK
-# ------------------------------------------------------------------------------------
-# --> ANOVA of APPVERSION vs STORIES CREATED IN SESSION 1
-# --> OBSERVATION: the design here is Between-Group
+# --> Friedman. => (MSN) Mood narrator
 {
-    subset_columns <- c("week", "nid", "stat_stories_from_log", "appversion", "group")
-    vcolumn <- "stat_editions_from_log"
+    subset_columns <- c("week", "nid", "mood_after_narrator", "appversion", "group")
+    vcolumn <- "mood_after_narrator"
     gcolumn <- "appversion"
     pcolumn <- "nid"
-    test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
-    df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot.pdf",sep="")
-    anova.boxplot.posthoc(df,file,appvnames)
+    test <- paste("MSN-friedman",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=file)      
     
-    subset <- firstweekall[,subset_columns]
-    cast(subset,week  ~ appversion, value="stat_stories_from_log")
-    
+    # Repeat with second half of study
+    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                , plot.filename=file)      
 }
+
+
+# ------------------------------------------------------------------------------------
+# --> Friedman. => (MSL) Mood narrator
+{
+    subset_columns <- c("week", "nid", "mood_after_listener", "appversion", "group")
+    vcolumn <- "mood_after_listener"
+    gcolumn <- "appversion"
+    pcolumn <- "nid"
+    test <- paste("MSL-friedman",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                ,plot.filename=file)      
+    
+    # Repeat with second half of study
+    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
+                                , plot.filename=file)      
+}
+
+
+
+# ------------------------------------------------------------------------------------
+# --> Friedman. => (ST) Storytelling
+{
+    subset_columns <- c("week", "nid", "st_score", "appversion", "group")
+    vcolumn <- "st_score"
+    gcolumn <- "appversion"
+    pcolumn <- "nid"
+    test <- paste("ST-friedman",gcolumn,vcolumn,sep="")
+    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = 1
+                                ,plot.filename=file)      
+    
+    # Repeat with second half of study
+    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
+    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
+    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = 1
+                                , plot.filename=file)      
+}
+
+
+
+
+
+
 
 
 # ------------------------------------------------------------------------------------
@@ -314,7 +342,7 @@
     pcolumn <- "nid"
     test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
     df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
-        
+    
     file <-paste(figdir,test,"-boxplot.pdf",sep="")
     anova.boxplot.posthoc(df,file,appvnames)
     
@@ -324,7 +352,7 @@
     df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
     file <-paste(figdir,test,"-boxplot.pdf",sep="")
     anova.boxplot.posthoc(df,file,appvnames)
-
+    
     # 1. Stimulation
     vcolumn <- stimulation 
     test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
@@ -357,20 +385,20 @@
     
     cast(dt, week~nid, value=storytelling)
     qual <- ddply(dt,~week,summarise,
-          prep=mean(p_score,na.rm=T),
-          stim=mean((sg_score+se_score+set_score)/3),
-          story=mean(st_score),
-          self=mean(sr_score),
-          pres=mean((pc_score+pnc_score)/2),
-          cur=mean((cc_score+cnc_score)/2),
-          col=mean((pc_score+cc_score)/2),
-          gstim=mean(sg_score),
-          extestim=mean(se_score),
-          exttablet=mean(set_score),
-          colpres=mean(pc_score),
-          nocolpres=mean(pc_score),
-          colcur=mean(cc_score),
-          nocolcur=mean(cc_score))
+                  prep=mean(p_score,na.rm=T),
+                  stim=mean((sg_score+se_score+set_score)/3),
+                  story=mean(st_score),
+                  self=mean(sr_score),
+                  pres=mean((pc_score+pnc_score)/2),
+                  cur=mean((cc_score+cnc_score)/2),
+                  col=mean((pc_score+cc_score)/2),
+                  gstim=mean(sg_score),
+                  extestim=mean(se_score),
+                  exttablet=mean(set_score),
+                  colpres=mean(pc_score),
+                  nocolpres=mean(pc_score),
+                  colcur=mean(cc_score),
+                  nocolcur=mean(cc_score))
     
     attach(qual)
     plot(qual$week,qual$prep,
@@ -414,25 +442,6 @@
     
     
 }
-
-
-
-
-# ------------------------------------------------------------------------------------
-# --> SHIFT OF FOCUS
-# ------------------------------------------------------------------------------------
-# --> ANOVA of APPVERSION vs STORIES CREATED IN SESSION 1
-# --> OBSERVATION: the design here is Between-Group
-
-
-# --> 1.2 appversion vs sg_score (stories created in the sesion)
-
-
-# TEST 2 ==> SplitPlot ANOVA between appversion/group and SKM+SSQ
-
-# TEST 3 ==> SplitPlot ANOVA between appversion/family (group=1) and SKM+SSQ
-
-
 
 ########################################################################################
 # TEST 4 ==> Cramer's V Correlation between family and SSQ
@@ -606,211 +615,31 @@
          ylab="Social Disengagement of Listener")
     f=paste(figdir,"relations-",v1,"-",v2,"",sep="")
     dev.copy2pdf(file=f)
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-# Dataset description
-# SAP = session and participants columns
-# - sid 	= session id (ratio) 
-# - nid 	= narrator id
-# - nage 	= narrator age                             
-# - ngender	= narrator gender
-# - lid 	= listener id
-# - lage	= listener age
-# - lgender	= listener gender
-# - n2id	= narrator 2 id
-# - n2age 	= narrator 2 age  
-# - n2gender= narrator 2 gender
-#
-# - nsindex	= narrator social disengagement
-# - lsindex	= listener social disengagement
-# - n2sindex= narrator 2 social disengagement
-#         
-# SC = session controlled conditions                
-# - family
-# - pair
-# - group                            
-# - week
-# - finalweek                       
-# -	cumulweek
-# - intergenerational_index          
-#
-# SBS = Session basic stats
-# - done                            
-# - duration
-# - wtest
-#
-# SC = session controlled conditions (2) 
-# - appversion                      
-# - appversion2 (separating versions of context introduced in half the study) 
-#                
-# SKM = sesion key metrics
-# - stat_stories
-# - stat_stories_from_log
-# - stat_editions
-# - stat_editions_from_log
-# - stat_deletions                  
-# - stat_pictures
-# - stat_questions_views
-# - stat_questions_answered
-# - stat_public_memento_views
-# - stat_public_memento_detail_views mood_week_narrator              
-# - mood_before_narrator
-# - mood_after_narrator
-# - mood_week_listener              
-# - mood_before_listener
-# - mood_after_listener
-# - mood_week_narrator2
-# - mood_before_narrator2
-# - mood_after_narrator2
-# - log_traffic 
-#
-# SSQ = Session stages qualitative evaluation 
-# - p_score_binary
-# - p_score
-# - s_max_score
-# - sg_score
-# - se_score
-# - set_score                       
-# - st_score
-# - sr_score
-# - pc_score
-# - pnc_score
-# - cc_score
-# - cnc_score
-# - c_max_score  
-
-
-# [1] http://www.r-statistics.com/2010/02/post-hoc-analysis-for-friedmans-test-r-code/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ------------------------------------------------------------------------------------
-# --> Friedman. => (SS) Created stories
-{
-    subset_columns <- c("week", "nid", "stat_stories_from_log", "appversion", "group")
-    vcolumn <- "stat_stories_from_log"
-    gcolumn <- "appversion"
-    pcolumn <- "nid"
-    test <- paste("SS-friedman",gcolumn,vcolumn,sep="")
-    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                ,plot.filename=file)      
     
-    # Repeat with second half of study
-    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                , plot.filename=file)      
-}
-
-# ------------------------------------------------------------------------------------
-# --> Friedman. => (PS) Created pictures
-{
-    subset_columns <- c("week", "nid", "stat_pictures", "appversion", "group")
-    vcolumn <- "stat_pictures"
-    gcolumn <- "appversion"
-    pcolumn <- "nid"
-    test <- paste("PS-friedman",gcolumn,vcolumn,sep="")
-    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                ,plot.filename=file)      
-    
-    # Repeat with second half of study
-    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                , plot.filename=file)      
 }
 
 
-# ------------------------------------------------------------------------------------
-# --> Friedman. => (QS) Questions answered
-{
-    subset_columns <- c("week", "nid", "stat_questions_answered", "appversion", "group")
-    vcolumn <- "stat_questions_answered"
-    gcolumn <- "appversion"
-    pcolumn <- "nid"
-    test <- paste("QS-friedman",gcolumn,vcolumn,sep="")
-    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                ,plot.filename=file)      
-    
-    # Repeat with second half of study
-    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                , plot.filename=file)      
-}
 
 
-# ------------------------------------------------------------------------------------
-# --> Friedman. => (MS) Public memento detail views
-{
-    subset_columns <- c("week", "nid", "stat_public_memento_detail_views", "appversion", "group")
-    vcolumn <- "stat_public_memento_detail_views"
-    gcolumn <- "appversion"
-    pcolumn <- "nid"
-    test <- paste("MS-friedman",gcolumn,vcolumn,sep="")
-    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                ,plot.filename=file)      
-    
-    # Repeat with second half of study
-    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                , plot.filename=file)      
-}
 
-# ------------------------------------------------------------------------------------
-# --> Friedman. => (MSN) Mood narrator
-{
-    subset_columns <- c("week", "nid", "mood_after_narrator", "appversion", "group")
-    vcolumn <- "mood_after_narrator"
-    gcolumn <- "appversion"
-    pcolumn <- "nid"
-    test <- paste("MSN-friedman",gcolumn,vcolumn,sep="")
-    df <- prepare.subset.data(stable_1stweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                ,plot.filename=file)      
-    
-    # Repeat with second half of study
-    df <- prepare.subset.data(stable_lastweeks,vcolumn,gcolumn,pcolumn)
-    file <-paste(figdir,test,"-boxplot-lastweeks-friedman.pdf",sep="")
-    friedman.test.with.post.hoc(Value ~ Group | Participant, df, signif.P = .9
-                                , plot.filename=file)      
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

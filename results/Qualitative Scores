@@ -1,0 +1,129 @@
+  week prep stim story self pres  cur col gstim extestim exttablet colpres nocolpres colcur nocolcur
+1    1  2.2 1.06   2.8  1.5  1.7 0.75 1.8  0.50      1.8      0.83     2.2       2.2   1.33     1.33
+2    2  2.0 1.56   2.8  0.5  1.6 0.42 1.2  1.83      1.8      1.00     1.7       1.7   0.67     0.67
+3    3  2.7 1.06   3.0  1.3  1.8 0.92 1.8  0.67      1.3      1.17     2.0       2.0   1.50     1.50
+4    4  2.2 1.28   2.5  1.0  1.8 0.92 1.4  1.33      1.7      0.83     1.5       1.5   1.33     1.33
+5    5  2.5 1.11   2.8  1.0  1.5 0.67 1.3  0.33      2.2      0.83     1.7       1.7   1.00     1.00
+6    6  2.5 1.11   2.8  1.2  1.7 1.08 2.0  0.50      2.3      0.50     1.8       1.8   2.17     2.17
+7    7  2.7 1.17   2.7  1.2  1.6 0.33 1.3  0.67      2.2      0.67     2.0       2.0   0.67     0.67
+8    8  2.5 0.83   2.2  1.3  1.3 0.67 1.1  0.67      1.5      0.33     1.3       1.3   0.83     0.83
+
+
+
+
+> cor.test(CollabScores,Stories,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  CollabScores and Stories
+t = -1, df = 69, p-value = 0.3216
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.34  0.12
+sample estimates:
+  cor 
+-0.12 
+
+> cor.test(ExtStimulation,Stories,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  ExtStimulation and Stories
+t = 0.58, df = 69, p-value = 0.5659
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.17  0.30
+sample estimates:
+  cor 
+0.069 
+
+> cor.test(MoodNarrator,ExtStimulation,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  MoodNarrator and ExtStimulation
+t = 0.4, df = 62, p-value = 0.6874
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.20  0.29
+sample estimates:
+  cor 
+0.051 
+
+> cor.test(MoodNarrator,CollabScores,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  MoodNarrator and CollabScores
+t = -0.29, df = 62, p-value = 0.7692
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.28  0.21
+sample estimates:
+   cor 
+-0.037 
+
+> cor.test(CollabScores,GuidedStimulation,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  CollabScores and GuidedStimulation
+t = -0.34, df = 69, p-value = 0.7366
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.27  0.19
+sample estimates:
+   cor 
+-0.041 
+
+> cor.test(CollabScores,AppUsage,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  CollabScores and AppUsage
+t = -0.72, df = 69, p-value = 0.4758
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.31  0.15
+sample estimates:
+   cor 
+-0.086 
+
+> cor.test(CollabScores,NarratorSocial,method="pearson")
+
+    Pearson's product-moment correlation
+
+data:  CollabScores and NarratorSocial
+t = -0.64, df = 39, p-value = 0.5236
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.40  0.21
+sample estimates:
+ cor 
+-0.1 
+
+> cor.test(CollabScores,ListenerSocial,method="pearson") # 0.3422 ==> The highest so far
+
+    Pearson's product-moment correlation
+
+data:  CollabScores and ListenerSocial
+t = 1.7, df = 44, p-value = 0.1049
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.052  0.498
+sample estimates:
+ cor 
+0.24 
+
+> cor.test(CollabScores,ListenerSocial,method="pearson") # 0.3422 ==> The highest so far
+
+    Pearson's product-moment correlation
+
+data:  CollabScores and ListenerSocial
+t = 1.7, df = 44, p-value = 0.1049
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.052  0.498
+sample estimates:
+ cor 
+0.24 

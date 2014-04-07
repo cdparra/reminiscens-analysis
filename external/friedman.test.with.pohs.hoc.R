@@ -138,7 +138,7 @@ friedman.test.with.post.hoc <- function(formu, data, to.print.friedman = T,
       }
       
       dev.copy2pdf(file=plot.filename)
-     
+      par(mfrow = c(1,1))     
       list.to.return <- list(Friedman.Test = the.sym.test, PostHoc.Test = The.post.hoc.P.values)
       if(to.print.friedman) {print(list.to.return)}				
       return(list.to.return)

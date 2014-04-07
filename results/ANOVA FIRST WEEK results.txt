@@ -32,3 +32,207 @@ $Group
 3-2 11.250819 0.6761670
 4-2  7.342943 0.9978062
 4-3  3.623585 0.4753344
+
+
+# Qualitative evaluation of the first week
+# storytelling
+>     values <- subset[,qualscores]
+>     summary(values)
+    p_score      s_max_score   
+ Min.   :0.00   Min.   :1.000  
+ 1st Qu.:0.00   1st Qu.:2.000  
+ Median :2.00   Median :2.000  
+ Mean   :1.50   Mean   :2.071  
+ 3rd Qu.:2.75   3rd Qu.:2.750  
+ Max.   :3.00   Max.   :3.000  
+ NA's   :1      NA's   :1      
+    se_score        sg_score     
+ Min.   :0.000   Min.   :0.0000  
+ 1st Qu.:2.000   1st Qu.:0.0000  
+ Median :2.000   Median :0.5000  
+ Mean   :1.929   Mean   :0.7857  
+ 3rd Qu.:2.000   3rd Qu.:1.0000  
+ Max.   :3.000   Max.   :3.0000  
+ NA's   :1       NA's   :1       
+   set_score         st_score    
+ Min.   :0.0000   Min.   :2.000  
+ 1st Qu.:0.0000   1st Qu.:3.000  
+ Median :0.0000   Median :3.000  
+ Mean   :0.5714   Mean   :2.786  
+ 3rd Qu.:0.0000   3rd Qu.:3.000  
+ Max.   :3.0000   Max.   :3.000  
+ NA's   :1        NA's   :1      
+    sr_score        pc_score    
+ Min.   :0.000   Min.   :0.000  
+ 1st Qu.:0.250   1st Qu.:1.250  
+ Median :1.000   Median :2.000  
+ Mean   :1.214   Mean   :1.929  
+ 3rd Qu.:2.000   3rd Qu.:3.000  
+ Max.   :3.000   Max.   :3.000  
+ NA's   :1       NA's   :1      
+   pnc_score        cc_score    
+ Min.   :0.000   Min.   :0.000  
+ 1st Qu.:0.250   1st Qu.:0.000  
+ Median :2.000   Median :1.500  
+ Mean   :1.571   Mean   :1.214  
+ 3rd Qu.:2.750   3rd Qu.:2.000  
+ Max.   :3.000   Max.   :3.000  
+ NA's   :1       NA's   :1      
+   cnc_score       c_max_score   
+ Min.   :0.0000   Min.   :0.000  
+ 1st Qu.:0.0000   1st Qu.:2.000  
+ Median :0.0000   Median :2.500  
+ Mean   :0.3571   Mean   :2.143  
+ 3rd Qu.:0.0000   3rd Qu.:3.000  
+ Max.   :2.0000   Max.   :3.000  
+ NA's   :1        NA's   :1      
+>     
+>     
+>     # 1. Storytelling
+>     vcolumn <- storytelling
+>     gcolumn <- "appversion"
+>     pcolumn <- "nid"
+>     test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
+>     df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
+>         
+>     file <-paste(figdir,test,"-boxplot.pdf",sep="")
+>     anova.boxplot.posthoc(df,file,appvnames)
+            Df Sum Sq Mean Sq F value
+Group        3 0.9405  0.3135   2.213
+Residuals   10 1.4167  0.1417        
+            Pr(>F)
+Group        0.149
+Residuals         
+1 observation deleted due to missingness
+[1] "Square-root differences between conditions"
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Value ~ Group, data = data)
+
+$Group
+             diff        lwr       upr
+2-1 -6.666667e-01 -1.6068622 0.2735288
+3-1 -2.500000e-01 -1.1294723 0.6294723
+4-1 -4.440892e-16 -0.8794723 0.8794723
+3-2  4.166667e-01 -0.4628057 1.2961390
+4-2  6.666667e-01 -0.2128057 1.5461390
+4-3  2.500000e-01 -0.5642332 1.0642332
+        p adj
+2-1 0.1969970
+3-1 0.8202243
+4-1 1.0000000
+3-2 0.4996542
+4-2 0.1580214
+4-3 0.7851012
+
+>     
+>     # 1. Collaboration
+>     vcolumn <- collaboration 
+>     test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
+>     df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
+>     file <-paste(figdir,test,"-boxplot.pdf",sep="")
+>     anova.boxplot.posthoc(df,file,appvnames)
+            Df Sum Sq Mean Sq F value
+Group        3  6.298  2.0992   2.229
+Residuals   10  9.417  0.9417        
+            Pr(>F)
+Group        0.148
+Residuals         
+1 observation deleted due to missingness
+[1] "Square-root differences between conditions"
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Value ~ Group, data = data)
+
+$Group
+           diff       lwr      upr
+2-1  1.66666667 -0.757335 4.090668
+3-1  1.75000000 -0.517446 4.017446
+4-1  1.00000000 -1.267446 3.267446
+3-2  0.08333333 -2.184113 2.350779
+4-2 -0.66666667 -2.934113 1.600779
+4-3 -0.75000000 -2.849247 1.349247
+        p adj
+2-1 0.2165590
+3-1 0.1483645
+4-1 0.5552420
+3-2 0.9994556
+4-2 0.8054501
+4-3 0.7014678
+
+> 
+>     # 1. Stimulation
+>     vcolumn <- stimulation 
+>     test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
+>     df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
+>     file <-paste(figdir,test,"-boxplot.pdf",sep="")
+>     anova.boxplot.posthoc(df,file,appvnames)
+            Df Sum Sq Mean Sq F value
+Group        3  2.512  0.8373   1.896
+Residuals   10  4.417  0.4417        
+            Pr(>F)
+Group        0.194
+Residuals         
+1 observation deleted due to missingness
+[1] "Square-root differences between conditions"
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Value ~ Group, data = data)
+
+$Group
+          diff        lwr       upr
+2-1  0.6666667 -0.9934233 2.3267567
+3-1  0.2500000 -1.3028720 1.8028720
+4-1 -0.5000000 -2.0528720 1.0528720
+3-2 -0.4166667 -1.9695387 1.1362053
+4-2 -1.1666667 -2.7195387 0.3862053
+4-3 -0.7500000 -2.1876801 0.6876801
+        p adj
+2-1 0.6240768
+3-1 0.9589806
+4-1 0.7609643
+3-2 0.8433945
+4-2 0.1629466
+4-3 0.4228579
+
+>     
+>     
+>     # 1. Col Preservation
+>     vcolumn <- colpreserv 
+>     test <- paste("aov-1time-",gcolumn,vcolumn,sep="")
+>     df <- prepare.subset.data(firstweekall,vcolumn,gcolumn,pcolumn)
+>     file <-paste(figdir,test,"-boxplot.pdf",sep="")
+>     anova.boxplot.posthoc(df,file,appvnames)
+            Df Sum Sq Mean Sq F value
+Group        3 10.595   3.532    8.15
+Residuals   10  4.333   0.433        
+             Pr(>F)   
+Group       0.00486 **
+Residuals             
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+1 observation deleted due to missingness
+[1] "Square-root differences between conditions"
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Value ~ Group, data = data)
+
+$Group
+          diff        lwr       upr
+2-1  2.3333333  0.6889791 3.9776875
+3-1  2.1666667  0.6285142 3.7048192
+4-1  1.6666667  0.1285142 3.2048192
+3-2 -0.1666667 -1.7048192 1.3714858
+4-2 -0.6666667 -2.2048192 0.8714858
+4-3 -0.5000000 -1.9240525 0.9240525
+        p adj
+2-1 0.0066900
+3-1 0.0070211
+4-1 0.0332878
+3-2 0.9866869
+4-2 0.5684029
+4-3 0.7120530
